@@ -1,0 +1,54 @@
+import { bind } from "astal"
+import Hyprland from "gi://AstalHyprland"
+import Apps from "gi://AstalApps"
+import { Gtk, Widget } from "astal/gtk3"
+import { Overlay } from "astal/gtk3/widget"
+const hyprland = Hyprland.get_default()
+const apps = new Apps.Apps()
+
+function NewClient(client: Hyprland.Client) {
+	apps.entryMultiplier = 10
+	let hyprClass = (client) ? apps.exact_query(client.class)[0] : null
+	let b = <box halign={Gtk.Align.END} className="clientLabel" visible={true}>
+		<icon 
+			icon={(client) ? hyprClass?.iconName : "archlinux"}
+			css="font-size: 24px; margin-right: 4px;"
+		/>
+		<label css="font-family: comfortaa; font-size: 14px;">{
+			(client) ? hyprClass?.name : "Hummingbird"
+		}</label>
+	</box>
+	return b
+}
+
+export default function client() {
+	let clientContainer = <box />
+	let clientOverlay: Overlay
+	clientOverlay = <overlay
+		overlays={[new Widget.Box(), NewClient(hyprland.focusedClient)]}
+		css={bind(hyprland, "focusedClient").as(c => {
+			let newClient = NewClient(c)
+			clientContainer.css = `min-width: ${newClient.get_preferred_width()[0]}px;`
+			if (clientOverlay) {
+				let os = clientOverlay.overlays
+				if (os[os.length-1].children[1].label === newClient.children[1].label) {
+					return ""
+				}
+				clientOverlay.add_overlay(newClient)
+				if (os.length > 2) {
+					os[os.length-1].css = "margin-top: 50px; opacity: 0;"
+				}
+				setTimeout(() => {
+					if (os.length > 2)
+						clientOverlay.remove(os[os.length-1])
+				}, 500)
+			}
+			return ""
+		})}
+		passThrough={true}>
+			{clientContainer}
+		</overlay>
+	return <button>
+		{clientOverlay}
+	</button>
+}

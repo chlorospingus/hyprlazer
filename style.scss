@@ -1,0 +1,292 @@
+@import "colors";
+
+window {
+  background: $background-1;
+  color: $text-2;
+  font-family: comfortaa; 
+  font-weight: bolder;
+  font-size: 14px;
+
+  > centerbox {
+    background: $background-1;
+  }
+}
+
+button {
+  animation: none;
+  background: transparent;
+  color: $text-1;
+  padding: 0;
+
+  > box, > overlay > box {
+    transition: ease-out 0.2s;
+    border-radius: 12px;
+    padding: 0 6px 0 6px;
+    margin: 2px 6px 4px 6px;
+    color: $text-1;
+  }
+
+  &.selected {
+    > box {
+      background: $highlight-1;
+      box-shadow: 0 0 4px 0 $highlight-1;
+    }
+  }
+
+  &:hover {
+    color: transparent;
+    > box, > overlay > box {
+      background: $background-2;
+    }
+    &.selected {
+      > box, > overlay > box {
+        background: $highlight-1s;
+      }
+    }
+  }
+}
+
+.workspaces {
+  padding: 0 20px 0 20px;
+}
+
+.workspaceContainer {
+  min-width: 32px;
+  padding: 0;
+  margin: 0;
+}
+
+.workspaceButton > box {
+  padding: 0;
+  margin: 0;
+}
+
+.workspaceBg {
+  background: $background-1;
+  border: 2px solid $text-1;
+  border-radius: 100%;
+}
+
+.workspaceIndicator {
+  transition: all cubic-bezier(0.34, 1.4, 0.64, 1) 0.4s;
+  background: $text-1;
+  min-width: 24px;
+  min-height: 4px;
+  border-radius: 4px;
+}
+
+.workspaceButton {
+  background: $background-1;
+  padding: 0;
+  margin: 0;
+  > box {
+    transition: all ease-out 0.1s;
+    margin: 2px 2px 6px 2px;
+    border-radius: 8px;
+  }
+  > box > box {
+    margin-left: 6px;
+    transition: ease-out 0.2s;
+    min-width: 8px;
+    min-height: 8px;
+    border-radius: 100%;
+    border: solid 4px;
+    color: $text-1;
+    &.active {
+      min-width: 0px;
+      min-height: 0px;
+      border-width: 8px;
+    }
+    &.focused {
+      min-width: 6px;
+      min-height: 6px;
+    }
+  }
+  &:hover {
+    color: $background-1;
+    > box {
+      background: $background-2;
+    }
+  }
+}
+
+.popupWindow {
+  background: transparent;
+  > box {
+    background: $background-3;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 4px black;
+    padding: 10px;
+    margin: 48px 40px 40px 12px;
+  }
+}
+
+
+.popupBattery {
+  .percentage {
+    color: $text-1;
+    background: $background-1;
+    border-radius: 6px;
+    padding: 4px 6px 4px 6px;
+    box-shadow: 0 0 5px -1px $background-1;
+  }
+  levelbar block:not(.empty) {
+    background: $highlight-2;
+    border-radius: 8px;
+    box-shadow: 0 0 4px 0px $background-1;
+  }
+  levelbar block.empty {
+    border-radius: 8px;
+    background: $background-4;
+  }
+  .info {
+    min-height: 96px;
+    min-width: 96px;
+    background: $background-4;
+    border-radius: 8px;
+  }
+}
+.bigText {
+  font-size: 16px;
+}
+.smallText {
+  font-size: 12px;
+}
+
+.toggleButton {
+  &:hover .toggleIndicator {
+    box-shadow: 0 0 6px 0px $highlight-3;
+  }
+  > overlay {
+    margin: 0;
+    padding: 6px 0px 6px 0px;
+    > label {
+      color: $text-1;
+      font-size: 16px;
+      margin: 2px;
+    }
+    > .active {
+      margin: 4px 12px 4px 0;
+      min-width: 32px;
+      background: $highlight-3;
+    }
+  }
+}
+
+.scroller {
+  levelbar block {
+    margin: 0 2px 0 4px;
+    border-radius: 4px;
+    &:not(.empty) {
+      background: $text-2;
+    }
+    .empty {
+      background: $background-3;
+    }
+  }
+  & .active {
+    > box {
+      margin: 4px 12px 4px 0;
+      min-width: 32px;
+      background: $highlight-1;
+    }
+  }
+}
+
+.volSlider {
+  scale {
+    min-width: 250px;
+    &:hover slider {
+      box-shadow: 0 0 6px 0px $highlight-3;
+    }
+  }
+  scale slider {
+    transition: all cubic-bezier(0.34, 1.6, 0.64, 1) 0.25s, box-shadow ease-out 0.3s;
+    min-height: 6px;
+    min-width: 24px;
+    border: none;
+    box-shadow: none;
+    color: $highlight-3;
+    background: $highlight-3;
+    margin: -6px;
+    box-shadow: 0 0 4px 0 $background-3;
+    &:active {
+      min-width: 40px;
+    }
+  }
+  scale trough {
+    min-height: 6px;
+    background-color: $background-1;
+    border-radius: 8px;
+  }
+  scale highlight {
+    border-radius: 8px;
+    background: $highlight-3;
+    color: $highlight-3;
+  }
+}
+
+@keyframes upIn {
+  from {margin-top: -50px; opacity: 0;}
+  to {opacity: 100;}
+}
+
+.clientLabel {
+  animation: upIn cubic-bezier(0.22, 1, 0.36, 1) 0.5s;
+  transition: all cubic-bezier(0.22, 1, 0.36, 1) 0.2s;
+  margin-left: 6px;
+  background: transparent;
+}
+
+.coverArt {
+  margin: 0;
+  padding: 0;
+  min-width: 24px;
+  min-height: 24px;
+  border-radius: 8px;
+}
+
+.bigCoverArt{
+  transition: all ease-in-out 1s;
+  min-width: 300px;
+  min-height: 150px;
+  background-size: cover;
+  background-position: center;
+  background-color: #ccc;
+  background-blend-mode: multiply;
+  border-radius: 8px;
+}
+
+.playerLabel {
+  .playerTitle {
+    font-size: 20px;
+  }
+  .playerArtist {
+    font-size: 14px;
+  }
+}
+
+.playerButton {
+  padding: 0;
+  margin: 0;
+  > button > box {
+    min-height: 36px;
+  }
+}
+
+.bigCoverShadow {
+  min-width: 50px;
+  min-height: 0;
+  background: rgba(0, 0, 0, 0.67);
+  box-shadow: 0 0 48px 48px #000000;
+}
+
+.toggleIndicator {
+  transition: all cubic-bezier(0.34, 1.6, 0.64, 1) 0.25s;
+  min-height: 6px;
+  min-width: 24px;
+  padding: 0;
+  margin: 4px 16px 4px 0;
+  border: 2px solid $highlight-3;
+  border-radius: 8px;
+}
