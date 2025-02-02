@@ -44,7 +44,7 @@ function BattWindow() {
 		<box
 			className="popupBattery"
 			vertical={true}
-			spacing={8}>
+			spacing={12}>
 			<box spacing={10}>
 				<overlay overlay={new Widget.Label({
 					halign: Gtk.Align.CENTER,
@@ -107,7 +107,8 @@ function BattWindow() {
 				</box>
 			</box>
 			<box
-				vertical={true}>
+				vertical={true}
+				spacing={4}>
 				{profileButton("Power Saver", "power-saver")}
 				{profileButton("Balanced", "balanced")}
 				{profileButton("Performance", "performance")}

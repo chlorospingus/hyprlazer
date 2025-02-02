@@ -7,7 +7,7 @@ const hyprland = Hyprland.get_default()
 
 App.start({
     css: style,
-	icons: "/home/protoshark/.config/astal/assets/",
+	icons: "/home/protoshark/.config/ags/assets/",
     main() {
 		hyprland.monitors.map((monitor) => Bar(monitor))
     },

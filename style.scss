@@ -4,7 +4,7 @@ window {
   background: $background-1;
   color: $text-2;
   font-family: comfortaa; 
-  font-weight: bolder;
+  font-weight: 900;
   font-size: 14px;
 
   > centerbox {
@@ -154,6 +154,18 @@ button {
 }
 
 .toggleButton {
+  &.bt {
+    icon {
+      margin-right: 8px;
+    }
+    box {
+      background: none;
+    }
+    label {
+      margin-top: 2px;
+      margin-right: 60px;
+    }
+  }
   &:hover .toggleIndicator {
     box-shadow: 0 0 6px 0px $highlight-3;
   }
@@ -229,6 +241,7 @@ button {
 @keyframes upIn {
   from {margin-top: -50px; opacity: 0;}
   to {opacity: 100;}
+
 }
 
 .clientLabel {

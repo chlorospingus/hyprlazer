@@ -4,18 +4,30 @@ import Apps from "gi://AstalApps"
 import { Gtk, Widget } from "astal/gtk3"
 import { Overlay } from "astal/gtk3/widget"
 const hyprland = Hyprland.get_default()
-const apps = new Apps.Apps()
+const apps = new Apps.Apps({
+	entryMultiplier: 2,
+	categories_multiplier: 0,
+	description_multiplier: 0,
+	executable_multiplier: 0,
+	name_multiplier: 0,
+	keywordsMultiplier: 0,
+})
 
 function NewClient(client: Hyprland.Client) {
-	apps.entryMultiplier = 10
-	let hyprClass = (client) ? apps.exact_query(client.class)[0] : null
+	let appsClass = null
+	if (client) {
+		if (client.class == "soffice") {
+			client.class = ""
+		}
+		appsClass = apps.exact_query(client.class)[0]
+	}
 	let b = <box halign={Gtk.Align.END} className="clientLabel" visible={true}>
 		<icon 
-			icon={(client) ? hyprClass?.iconName : "archlinux"}
+			icon={(appsClass) ? appsClass.iconName : "archlinux"}
 			css="font-size: 24px; margin-right: 4px;"
 		/>
 		<label css="font-family: comfortaa; font-size: 14px;">{
-			(client) ? hyprClass?.name : "Hummingbird"
+			(appsClass) ? appsClass.name : "Hummingbird"
 		}</label>
 	</box>
 	return b

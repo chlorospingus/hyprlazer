@@ -1,4 +1,4 @@
-import { bind } from "astal"
+import { bind, execAsync } from "astal"
 import Bluetooth from "gi://AstalBluetooth"
 import { popup } from "./popup"
 import { Astal, Gtk, Widget } from "astal/gtk3"
@@ -8,15 +8,21 @@ const { TOP, LEFT } = Astal.WindowAnchor
 const bluetooth = Bluetooth.get_default()
 
 function bluetoothItem(device: Bluetooth.Device) {
-	return <button className="toggleButton">
+	return <button
+		className="bt toggleButton"
+		onClicked={() => {
+			execAsync(["bluetoothctl", device.connected ? "disconnect" : "connect", device.address]).then(out => console.log(out)).catch(out => console.log(out))
+		}}>
 		<overlay overlay={new Widget.Box({
-			className: "toggleIndicator",
+			className: bind(device, "connected").as(c => 
+				"toggleIndicator ".concat(c ? "active" : "inactive")
+			),
 			halign: Gtk.Align.END,
 			valign: Gtk.Align.CENTER,
 		})}>
 			<box>
 				<icon icon={device.icon} css="font-size: 32px;" />
-				<label>{device.alias ?? device.name}</label>
+				<label valign={Gtk.Align.CENTER}>{device.alias ?? device.name}</label>
 			</box>
 		</overlay>
 	</button>
@@ -25,10 +31,10 @@ function bluetoothItem(device: Bluetooth.Device) {
 function bluetoothWindow() {
 	return <window
 		anchor={ TOP | LEFT }
-		marginLeft={170}
+		marginLeft={140}
 		namespace="lazerpopup"
 		className="popupWindow">
-		<box vertical={true}>
+		<box vertical={true} css="margin-left: 40px">
 			{bluetooth.devices.map(dev => bluetoothItem(dev))}
 		</box>
 	</window>
