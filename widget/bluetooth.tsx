@@ -21,7 +21,7 @@ function bluetoothItem(device: Bluetooth.Device) {
 			valign: Gtk.Align.CENTER,
 		})}>
 			<box>
-				<icon icon={device.icon} css="font-size: 32px;" />
+				<icon icon={device.icon ?? "bluetooth"} css="font-size: 32px;" />
 				<label valign={Gtk.Align.CENTER}>{device.alias ?? device.name}</label>
 			</box>
 		</overlay>

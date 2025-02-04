@@ -8,6 +8,7 @@ import brightness from "./brightness"
 import client from "./client"
 import player from "./player"
 import bluetooth from "./bluetooth"
+import notifs from "./notif"
 
 const time = Variable("").poll(1000, "date +'%a %b %d · %H:%M'")
 
@@ -40,6 +41,7 @@ export default function Bar(monitor: Hyprland.Monitor) {
 						label={time()}
 					/>
 				</box></button>
+				{notifs()}
 			</box>
         </centerbox>
     </window>

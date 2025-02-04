@@ -10,6 +10,9 @@ window {
   > centerbox {
     background: $background-1;
   }
+  icon {
+    font-size: 24px;
+  }
 }
 
 button {
@@ -302,4 +305,35 @@ button {
   margin: 4px 16px 4px 0;
   border: 2px solid $highlight-3;
   border-radius: 8px;
+}
+
+@keyframes notifIn {
+  0% {
+    margin-right: -352px;
+  }
+}
+@keyframes glowIn {
+  from {
+    background: white;
+    box-shadow: 0 0 10px 4px white;
+  }
+}
+
+.notifBox {
+  animation: notifIn cubic-bezier(0.34, 1.4, 0.64, 1) 0.4s, glowIn ease-in 0.3s;
+  transition: margin cubic-bezier(0.34, 1.4, 0.64, 1) 0.4s;
+  background: $background-3;
+  border-radius: 10px;
+  padding: 8px;
+  box-shadow: 0 0 10px 4px black;
+  min-width: 300px;
+  margin: 12px 12px 40px 40px;
+}
+
+.notifIcon {
+  min-width: 64px;
+  min-height: 64px;
+  margin: 8px;
+  background-size: contain;
+  border-radius: 10px;
 }
