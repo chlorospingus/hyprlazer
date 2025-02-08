@@ -44,16 +44,6 @@ function cover(player: Mpris.Player) {
 	return coverOverlay
 }
 
-function wrap(str: string) {
-	if (str.length > 40) {
-		str = str.substring(0, 40)
-	}
-	if (str.length > 20) {
-		return str.substring(0, 20) + "\n" + str.substring(20)
-	}
-	return str
-}
-
 function playerBox(player: Mpris.Player) {
 	return <box
 		vertical={true}
@@ -92,12 +82,16 @@ function playerBox(player: Mpris.Player) {
 					new Widget.Label({
 						className: "playerTitle",
 						justify: Gtk.Justification.CENTER,
-						label: bind(player, "title").as(str => wrap(str))
+						wrap: true,
+						width_chars: 20,
+						label: bind(player, "title").as(str => str.substring(0, 60))
 					}),
 					new Widget.Label({
 						className: "playerArtist",
 						justify: Gtk.Justification.CENTER,
-						label: bind(player, "artist").as(str => wrap(str))
+						wrap: true,
+						width_chars: 20,
+						label: bind(player, "artist").as(str => str.substring(0, 60))
 					})
 				]
 			})

@@ -23,11 +23,11 @@ function NewClient(client: Hyprland.Client) {
 	}
 	let b = <box halign={Gtk.Align.END} className="clientLabel" visible={true}>
 		<icon 
-			icon={(appsClass) ? appsClass.iconName : "archlinux"}
+			icon={(appsClass) ? appsClass.iconName : "hyprland"}
 			css="font-size: 24px; margin-right: 4px;"
 		/>
 		<label css="font-family: comfortaa; font-size: 14px;">{
-			(appsClass) ? appsClass.name : "Hummingbird"
+			(appsClass) ? appsClass.name : "Hyprland"
 		}</label>
 	</box>
 	return b

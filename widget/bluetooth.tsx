@@ -13,18 +13,13 @@ function bluetoothItem(device: Bluetooth.Device) {
 		onClicked={() => {
 			execAsync(["bluetoothctl", device.connected ? "disconnect" : "connect", device.address]).then(out => console.log(out)).catch(out => console.log(out))
 		}}>
-		<overlay overlay={new Widget.Box({
-			className: bind(device, "connected").as(c => 
-				"toggleIndicator ".concat(c ? "active" : "inactive")
-			),
-			halign: Gtk.Align.END,
-			valign: Gtk.Align.CENTER,
-		})}>
-			<box>
+		<box>
+			<box hexpand>
 				<icon icon={device.icon ?? "bluetooth"} css="font-size: 32px;" />
 				<label valign={Gtk.Align.CENTER}>{device.alias ?? device.name}</label>
 			</box>
-		</overlay>
+			<box className={bind(device, "connected").as(c => "toggleIndicator ".concat(c ? "active" : "inactive"))} halign={Gtk.Align.END} valign={Gtk.Align.CENTER}/>
+		</box>
 	</button>
 }
 

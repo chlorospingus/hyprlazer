@@ -68,9 +68,12 @@ function BrightWindow() {
 						.then((out) => (console.log(out)))
 						.catch((out) => (console.log(out)))
 				}}	
-			><overlay overlay={toggleIndicator}>
-					<label halign={Gtk.Align.START}>Night Light</label>
-			</overlay></button>
+			>
+				<box>
+					<label hexpand halign={Gtk.Align.START}>Night Light</label>
+					{toggleIndicator}
+				</box>
+			</button>
 		</box>
 	</window>
 }

@@ -4,16 +4,16 @@ import Notif from "gi://AstalNotifd"
 import Pango from "gi://Pango?version=1.0"
 const notifs = Notif.get_default()
 
-const { TOP, RIGHT } = Astal.WindowAnchor
+const { TOP, RIGHT, BOTTOM } = Astal.WindowAnchor
 const notifPlaceholder = "/home/protoshark/.config/ags/assets/notif.svg"
 let notifWindow: Widget.Window
 
-function NewNotif(notif: Notif.Notification) {
+
+function NewNotif(notif: Notif.Notification, inPanel: boolean = true) {
 	return <box
-		className="notifBox"
+		className={inPanel ? "notifBox" : "panelNotifBox"}
 		halign={Gtk.Align.END}
-		valign={Gtk.Align.START} >
-		<box
+		valign={Gtk.Align.START}
 		spacing={8}>
 		<box 
 			halign={Gtk.Align.CENTER}
@@ -21,7 +21,11 @@ function NewNotif(notif: Notif.Notification) {
 			className="notifIcon" 
 			css={`background-image: url("${notif.image ?? notifPlaceholder}")`} 
 		/>
-		<box vertical={true} valign={Gtk.Align.CENTER} spacing={6}>
+		<box 
+			vertical 
+			valign={Gtk.Align.CENTER} 
+			spacing={6} 
+			hexpand>
 			<label 
 				halign={Gtk.Align.START} 
 				css="font-size: 16px;" 
@@ -39,7 +43,45 @@ function NewNotif(notif: Notif.Notification) {
 				{notif.body.substring(0, 88)}
 			</label>
 		</box>
-	</box></box>
+		<box vertical valign={Gtk.Align.CENTER}>
+			{notif.actions.map(action => <button onClicked={() => {
+				notif.invoke(action.id)
+			}}>
+				<box><icon icon={action.label.toLowerCase()} css="margin: 4px -2px;"/></box>
+			</button>)}
+		</box>
+	</box>
+}
+
+function NotifPanel() {
+	return <window 
+		anchor={ TOP | RIGHT | BOTTOM } 
+		marginTop={36}
+		namespace="notifpanel" >
+		<box vertical={true}>
+			<box>
+				<button 
+					hexpand
+					heightRequest={36}
+					onClicked={() => {
+					for (let n of notifs.notifications) {
+						n.dismiss()
+					}
+				}}>Clear notifications</button>
+				<button 
+					hexpand
+					heightRequest={36}
+					onClicked={() => {
+						notifs.dontDisturb = !notifs.dontDisturb
+				}}>Do not disturb</button>
+			</box>
+			<scrollable widthRequest={416} vexpand>
+				<box vertical={true}>
+					{notifs.notifications.map(n => NewNotif(n, false))}
+				</box>
+			</scrollable>
+		</box>
+	</window>
 }
 
 function notify(notif: Notif.Notification) {
@@ -59,6 +101,7 @@ function notify(notif: Notif.Notification) {
 		notifWindow = <window
 			anchor={ TOP | RIGHT }
 			marginTop={36}
+			layer={Astal.Layer.OVERLAY}
 			css="background: transparent;"
 			namespace="notification">
 			<overlay overlay={thisNotif}>
@@ -93,7 +136,14 @@ function notifCount() {
 
 export default function notifWidget() {
 	return <button
-		onClicked={() => {}}
+		onClicked={() => {
+			if (notifWindow) {
+				notifWindow.destroy()
+				notifWindow = null
+			} else {
+				notifWindow = NotifPanel()
+			}
+		}}
 		setup={(self) => self.hook(notifs, "notified", (_, id) => {
 			notify(notifs.get_notification(id))
 		})}>

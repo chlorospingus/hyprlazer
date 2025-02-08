@@ -9,6 +9,7 @@ import client from "./client"
 import player from "./player"
 import bluetooth from "./bluetooth"
 import notifs from "./notif"
+import power from "./power"
 
 const time = Variable("").poll(1000, "date +'%a %b %d · %H:%M'")
 
@@ -21,11 +22,13 @@ export default function Bar(monitor: Hyprland.Monitor) {
 		monitor={monitor.id}
         exclusivity={Astal.Exclusivity.IGNORE}
         anchor={TOP | LEFT | RIGHT}
-		heightRequest={36}
 		layer={Astal.Layer.TOP}
         application={App}>
-        <centerbox>
+		<eventbox
+			onHover={self => self.css="box-shadow: 0 0 16px 4px black;"}
+		><centerbox heightRequest={36}>
 			<box>
+				{power()}
 				{battery()}
 				{volume()}
 				{brightness()}
@@ -43,6 +46,6 @@ export default function Bar(monitor: Hyprland.Monitor) {
 				</box></button>
 				{notifs()}
 			</box>
-        </centerbox>
+        </centerbox></eventbox>
     </window>
 }

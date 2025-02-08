@@ -19,17 +19,19 @@ function profileButton(label: string, profile: string) {
 	return <button className="toggleButton" onClicked={(self) => {
 		powerProfiles.activeProfile = profile
 	}}>
-		<overlay overlay={new Widget.Box({
-				halign: Gtk.Align.END,
-				valign: Gtk.Align.CENTER,
-				className: bind(powerProfiles, "activeProfile").as((p) => 
+		<box halign={Gtk.Align.FILL}>
+			<label halign={Gtk.Align.START} hexpand>{label}</label>
+			<box 
+				halign={Gtk.Align.END} 
+				valign={Gtk.Align.CENTER}
+				className={bind(powerProfiles, "activeProfile").as((p) => 
 					(p === profile)
 						? "toggleIndicator active"
 						: "toggleIndicator inactive"
 				)
-			})}>
-			<label halign={Gtk.Align.START}>{label}</label>
-		</overlay>
+}
+			/>
+		</box>
 	</button>
 }
 
@@ -63,47 +65,40 @@ function BattWindow() {
 					/>
 				</overlay>
 				<box vertical={true} spacing={10}>
-					<overlay overlay={new Widget.Box({
-						halign: Gtk.Align.CENTER,
-						valign: Gtk.Align.CENTER,
-						vertical: true,
-						children: [
-							new Widget.Label({
-								className: "bigText",
-								label: bind(batt, "energyRate").as((w) => `${w}W`),
-							}),
-							new Widget.Label({
-								className: "smallText",
-								label: bind(batt, "charging").as(
-									(c) => c ? "Charging" : "Discharging"
-								),
-							}),
-						]
-					})}>
-						<box className="info" />
-					</overlay>
-					<overlay overlay={new Widget.Box({
-						halign: Gtk.Align.CENTER,
-						valign: Gtk.Align.CENTER,
-						vertical: true,
-						children: [
-							new Widget.Label({
-								className: "status",
-								label: mergeBindings([charging, toFull, toEmpty]).as(
+					<box className="info" vertical>
+						<label 
+							css="font-size: 16px;"
+							vexpand
+							valign={Gtk.Align.END}>
+							{bind(batt, "energyRate").as(w => `${w}W`)}
+						</label>
+						<label 
+							vexpand
+							valign={Gtk.Align.START}>
+							{bind(batt, "charging").as(c => 
+								c ? "Charging" : "Discharging"
+							)}
+						</label>
+					</box>
+					<box className="info" vertical>
+						<label 
+							css="font-size: 16px;"
+							vexpand
+							valign={Gtk.Align.END}>
+							{mergeBindings([charging, toFull, toEmpty]).as(
 									(b) => {
 										let s = (b[0] ? b[1] : b[2])
 										return `${Math.floor(s/3600)}H ${Math.floor((s%3600)/60)}M`
 									}
-								),
-							}),
-							new Widget.Label({
-								className: "title",
-								label: charging.as(c => c ? "To full" : "To empty"),
-							}),
-						]
-					})}>
-						<box className="info" />
-					</overlay>
+								)
+							}
+						</label>
+						<label 
+							vexpand
+							valign={Gtk.Align.START}>
+							{charging.as(c => c ? "To full" : "To empty")}
+						</label>
+					</box>
 				</box>
 			</box>
 			<box
