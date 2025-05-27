@@ -12,7 +12,7 @@ function PowerWindow() {
 		<box vertical css="padding: 6px 0;">
 			{[
 				["Lock", 		"bash -c 'pgrep -x hyprlock || hyprlock &'"	],
-				["Suspend", 	"/home/protoshark/.config/scripts/lock.sh"	],
+				["Suspend", 	"/home/spingus/.config/scripts/lock.sh"		],
 				["Logout", 		"hyprctl dispatch exit"						],
 				["Shutdown", 	"systemctl poweroff"						],
 				["Reboot", 		"systemctl reboot"							],

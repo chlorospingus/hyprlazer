@@ -64,7 +64,7 @@ function BrightWindow() {
 				className="toggleButton"
 				onClicked={(self) => {
 					toggleIndicator.toggleClassName("active", !sunset())
-					execAsync("/home/protoshark/.config/scripts/sunset-toggle.sh")
+					execAsync("/home/spingus/.config/scripts/sunset-toggle.sh")
 						.then((out) => (console.log(out)))
 						.catch((out) => (console.log(out)))
 				}}	

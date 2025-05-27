@@ -37,7 +37,6 @@ export default function Bar(monitor: Hyprland.Monitor) {
 			{workspaces(monitor)}
 			<box halign={Gtk.Align.END}>
 				{player()}
-				{client()}
 				<button><box>
 					<label
 						className="innerButton"

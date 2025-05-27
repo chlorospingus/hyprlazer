@@ -14,23 +14,24 @@ const apps = new Apps.Apps({
 })
 
 function NewClient(client: Hyprland.Client) {
-	let appsClass = null
-	if (client) {
-		if (client.class == "soffice") {
-			client.class = ""
-		}
-		appsClass = apps.exact_query(client.class)[0]
+	let appsClass
+	if (!client) {
+		appsClass = null
 	}
-	let b = <box halign={Gtk.Align.END} className="clientLabel" visible={true}>
+	else if (client.class === "soffice") {
+		appsClass = apps.list.find(app => app.wmClass === "libreoffice-startcenter")
+	} else {
+		appsClass = apps.list.find(app => app.wmClass === client?.class)
+	}
+	return <box halign={Gtk.Align.END} className="clientLabel" visible={true}>
 		<icon 
-			icon={(appsClass) ? appsClass.iconName : "hyprland"}
+			icon={appsClass?.iconName ?? "hyprland"}
 			css="font-size: 24px; margin-right: 4px;"
 		/>
 		<label css="font-family: comfortaa; font-size: 14px;">{
-			(appsClass) ? appsClass.name : "Hyprland"
+			appsClass?.name ?? "Hyprland"
 		}</label>
 	</box>
-	return b
 }
 
 export default function client() {

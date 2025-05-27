@@ -5,9 +5,15 @@ import Pango from "gi://Pango?version=1.0"
 const notifs = Notif.get_default()
 
 const { TOP, RIGHT, BOTTOM } = Astal.WindowAnchor
-const notifPlaceholder = "/home/protoshark/.config/ags/assets/notif.svg"
+const notifPlaceholder = "/home/spingus/.config/ags/assets/notif.svg"
 let notifWindow: Widget.Window
+let lastId: number
 
+const wrap = (str: string, chars: number): string => {
+	if (str.length <= chars)
+		return str;
+	return str.substring(0, chars) + "\n" + wrap(str.substring(chars), chars);
+}
 
 function NewNotif(notif: Notif.Notification, inPanel: boolean = true) {
 	return <box
@@ -28,19 +34,13 @@ function NewNotif(notif: Notif.Notification, inPanel: boolean = true) {
 			hexpand>
 			<label 
 				halign={Gtk.Align.START} 
-				css="font-size: 16px;" 
-				wrap={true} 
-				maxWidthChars={20} 
-				wrapMode={Pango.WrapMode.WORD_CHAR}>
-				{notif.summary.substring(0, 80)}
+				css="font-size: 16px;">
+				{wrap(notif.summary, 18)}
 			</label>
 			<label 
 				halign={Gtk.Align.START} 
-				css="font-size: 14px;" 
-				wrap={true} 
-				maxWidthChars={22} 
-				wrapMode={Pango.WrapMode.WORD_CHAR}>
-				{notif.body.substring(0, 88)}
+				css="font-size: 14px;">
+				{wrap(notif.body, 22)}
 			</label>
 		</box>
 		<box vertical valign={Gtk.Align.CENTER}>
@@ -62,7 +62,6 @@ function NotifPanel() {
 			<box>
 				<button 
 					hexpand
-					heightRequest={36}
 					onClicked={() => {
 					for (let n of notifs.notifications) {
 						n.dismiss()
@@ -88,11 +87,9 @@ function notify(notif: Notif.Notification) {
 	let thisNotif = NewNotif(notif)
 	if (notifWindow) {
 		let os = notifWindow.get_child().overlays
-		let top = 12
 		for (let i = os.length-1; i > 0; i--) {
-			top += thisNotif.get_preferred_height()[0] - 40
 			if (os[i].get_preferred_width()[0] >= 352) {
-				os[i].css = `margin-top: ${top}px;`
+				os[i].css = `margin-top: ${(os[i+1]?.get_preferred_height()[0] ?? 20)+thisNotif.get_preferred_height()[0]-20}px;`
 			}
 		}
 		notifWindow.get_child().add_overlay(thisNotif)
@@ -100,8 +97,8 @@ function notify(notif: Notif.Notification) {
 	} else {
 		notifWindow = <window
 			anchor={ TOP | RIGHT }
-			marginTop={36}
 			layer={Astal.Layer.OVERLAY}
+			marginTop={36}
 			css="background: transparent;"
 			namespace="notification">
 			<overlay overlay={thisNotif}>
@@ -116,7 +113,8 @@ function notify(notif: Notif.Notification) {
 	}
 	setTimeout(() => {
 		let os = notifWindow.get_child().overlays
-		thisNotif.css = `margin-right: -352px; margin-top: ${thisNotif.get_preferred_height()[0]-thisNotif.get_child().get_preferred_height()[0]-52}px; transition: cubic-bezier(0.64, 0, 0.78, 0) 0.3s;`
+		let thisIndex = os.findIndex(nb => nb == thisNotif)
+		thisNotif.css = `margin-right: -352px; margin-top: ${(thisIndex === os.length-1) ? 20 : os[thisIndex+1].get_preferred_height()[0]+20}px; transition: cubic-bezier(0.64, 0, 0.78, 0) 0.3s;`
 		setTimeout(() => {
 			let os = notifWindow.get_child().overlays
 			notifWindow.get_child().remove(thisNotif)
@@ -126,12 +124,6 @@ function notify(notif: Notif.Notification) {
 			}
 		}, 400)
 	}, 3000)
-}
-
-function notifCount() {
-	return <label css="padding-top: 2px;">
-		{bind(notifs, "notifications").as(ns => ns.length)}
-	</label>
 }
 
 export default function notifWidget() {
@@ -145,11 +137,15 @@ export default function notifWidget() {
 			}
 		}}
 		setup={(self) => self.hook(notifs, "notified", (_, id) => {
-			notify(notifs.get_notification(id))
+			if (lastId === id) {
+				return
+			}
+			lastId = id
+			let notif = notifs.get_notification(id)
+			notify(notif)
 		})}>
 		<box>
 			<icon icon="notif" css="color: white;" />
-			{notifCount()}
 		</box>
 	</button>
 }
